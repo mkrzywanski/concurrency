@@ -11,6 +11,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 class ReentrantReadWriteLockExample {
 
     public static void main(String[] args) {
@@ -27,18 +29,6 @@ class ReentrantReadWriteLockExample {
         shutdown(executorService);
     }
 
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
-    }
 }
 
 class Reader implements Runnable {

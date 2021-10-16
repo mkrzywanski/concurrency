@@ -8,6 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 class PhaserExample {
 
     private static final Logger LOG = LoggerFactory.getLogger(PhaserExample.class);
@@ -33,18 +35,6 @@ class PhaserExample {
         phaser.arriveAndDeregister();
 
         shutdown(executorService);
-    }
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(20, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
 

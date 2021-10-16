@@ -3,10 +3,11 @@ package completionservice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.*;
+
+import static util.ExecutorServiceShutdown.shutdown;
 
 class ExecutorCompletionServiceExample {
 
@@ -32,16 +33,4 @@ class ExecutorCompletionServiceExample {
         shutdown(executorService);
     }
 
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
-    }
 }

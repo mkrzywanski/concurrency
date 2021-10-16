@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 class CyclicBarrierExample {
 
     private static final int THREADS = 10;
@@ -20,18 +22,6 @@ class CyclicBarrierExample {
                 .forEach(value -> executorService.submit(new Task(cyclicBarrier, value)));
 
         shutdown(executorService);
-    }
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
     }
 
     private static class Task implements Runnable {

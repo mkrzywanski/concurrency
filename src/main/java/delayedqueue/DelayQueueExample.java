@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.concurrent.*;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 /**
  * Producer will put 10 elements on rhe queue
  * Those elements will be consumed every 1 second by Consumer
@@ -20,20 +22,9 @@ class DelayQueueExample {
         ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
         executorService.submit(new Producer(queue));
         executorService.submit(new Consumer(queue));
+
         shutdown(executorService);
 
-    }
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(20, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
 

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 /**
  * Direct hands-off. TransferQueue is based on CAS. SynchronousQueue is based on double queues.
  */
@@ -24,17 +26,6 @@ class TransferQueueExample {
         shutdown(executorService);
     }
 
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(20, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
-    }
 }
 
 class Producer implements Runnable {

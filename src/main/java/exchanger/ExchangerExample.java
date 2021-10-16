@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static util.ExecutorServiceShutdown.shutdown;
+
 class ExchangerExample {
 
     public static void main(String[] args) throws InterruptedException {
@@ -21,19 +23,6 @@ class ExchangerExample {
         actor2.cancel(true);
 
         shutdown(executorService);
-    }
-
-
-    private static void shutdown(ExecutorService executorService) {
-        executorService.shutdown();
-        try {
-            boolean isTerminated = executorService.awaitTermination(20, TimeUnit.SECONDS);
-            if (!isTerminated) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException interruptedException) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
 
